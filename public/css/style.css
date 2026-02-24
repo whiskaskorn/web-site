@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-image: url('../images/blue_mult_img.gif');
+    background-repeat: no-repeat;
+    background-position: 100%;
+    min-height: 100vh;
+    background-size: cover;
+}
+
+.headers {
+padding: 20px 0;
+}
+
+.headers ul {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    list-style: none;
+}
+
+.headers a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    transition: 0.3s;
+    text-shadow:
+        0 0 5px  blue,
+        0 0 10px rgb(6, 84, 201),
+        0 0 20px cyan;
+}
+
+.headers a:hover {
+    color: cyan;
+    text-shadow:
+        0 0 5px blue,
+        0 0 15px blue,
+        0 0 30px blue;
+}

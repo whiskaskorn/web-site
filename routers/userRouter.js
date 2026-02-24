@@ -6,6 +6,8 @@ const router = express.Router()
 const minCount = 100000;
 const maxCount = 999999;
 const sgMail = require('@sendgrid/mail')
+const jwt = require('jsonwebtoken')
+const authMiddleware = require('../middlewares/authMiddleware')
 
 router.post('/registration', [
     check('username', 'Поле пользователя должно содержать от 5 до 12символов').isLength({min: 5,max: 12}),
@@ -85,7 +87,23 @@ router.post('/login', async(req,res)=>{
         if(!user.confirmed_code){
             return res.status(400).json({message: "Ваша электронная почта не подтверждена!"})
         }
-        res.status(200).json({message: 'Вы успешно залогинены!'})
+        
+        const jwt_token = jwt.sign({userID: user._id},process.env.JWT_SECRET_KEY,{expiresIn: '1h'})
+
+        res.status(200).json({message: 'Вы успешно залогинены!', jwt_token})
+    } catch (error) {
+        res.status(500).json({message: "Серверная ошибка!"})
+    }
+})
+
+router.get('/profile',authMiddleware, async(req,res)=>{
+    try {
+        const id = req.user.userID
+        const user = await userSchema.findById(id).select('-password',).select('-confirmed_code')
+        if(!user){
+            return res.status(404).json({message: 'Пользователь не найден!'})
+        }
+        res.json(user)
     } catch (error) {
         res.status(500).json({message: "Серверная ошибка!"})
     }

@@ -88,10 +88,12 @@ router.post('/login', async(req,res)=>{
             return res.status(400).json({message: "Ваша электронная почта не подтверждена!"})
         }
         
-        const jwt_token = jwt.sign({userID: user._id},process.env.JWT_SECRET_KEY,{expiresIn: '1h'})
+        const token = jwt.sign({userID: user._id},process.env.JWT_SECRET_KEY,{expiresIn: '1h'})
+        res.cookie('token',token, {httpOnly: true})
 
-        res.status(200).json({message: 'Вы успешно залогинены!', jwt_token})
+        res.status(200).json({message: 'Вы успешно залогинены!', token})
     } catch (error) {
+        console.log(error)
         res.status(500).json({message: "Серверная ошибка!"})
     }
 })

@@ -8,7 +8,8 @@ async function refreshToken(req,res){
             }
         try {
             const decoded = jwt.verify(refresh_token, process.env.JWT_REFRESH_SECRET_KEY)
-            const user = await userSchema.findById(decoded.userID)
+            req.user = decoded
+            const user = await userSchema.findById(req.user.userID)
             if(!user || refresh_token !== user.refresh_token){
                 return res.status(403).json({message: 'Инвалидный рефреш токен'})
             }
@@ -16,7 +17,7 @@ async function refreshToken(req,res){
             const newToken = jwt.sign({userID: user._id},process.env.JWT_SECRET_KEY,{expiresIn: '24h'})
             res.cookie('token',newToken, {
                 httpOnly:true,
-                maxAge: 60 * 60 * 1000
+                maxAge: 24 * 60 * 60 * 1000
             })
             res.json({message: 'Токен был обновлен!'})
         } catch (error) {

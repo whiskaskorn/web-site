@@ -11,7 +11,7 @@ async function userVarification(req,res){
             if(user.validation_code == userVarification){
                 user.confirmed_code = true;
                 user.validation_code = undefined;
-                user.save()
+                await user.save()
                 return res.status(200).json({message: 'Почта подтверждена! Вы можете залогиниться'})
             }
             return res.status(400).json({message: 'Неверный код!'})

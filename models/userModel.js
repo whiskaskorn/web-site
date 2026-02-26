@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     refresh_token: {type: String},
     validation_code: {type: Number},
     confirmed_code: {type: Boolean, default: false},
-    roles: {type: [String],default: 'User'}
+    roles: {type: [String],default: ['User']}
 })
 
 module.exports = mongoose.model('userSchema', userSchema)
